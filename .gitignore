@@ -1,0 +1,12 @@
+@"
+.venv/
+__pycache__/
+*.pt
+*.zip
+*.tar
+*.tar.gz
+*.crdownload
+data/
+data256/
+runs*/
+"@ |
