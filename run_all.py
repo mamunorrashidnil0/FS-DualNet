@@ -39,6 +39,9 @@ def main():
     tests = args.tests
     if not tests:
         tdir = os.path.join(args.data, "test")
+        if not os.path.isdir(tdir):
+            raise SystemExit(f"ERROR: {tdir} does not exist. prep_data.py found no test split (see its WARNING lines). "
+                             "Give test sets explicitly with --tests name=path, or fix/extract the test folders first.")
         tests = [f"{g}={os.path.join(tdir, g)}" for g in sorted(os.listdir(tdir))]
     print("test sets:", tests)
     here = os.path.dirname(os.path.abspath(__file__))

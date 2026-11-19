@@ -142,6 +142,11 @@ def main():
         show_tree(images)
         raise SystemExit(1)
 
+    print("splits with a '%s/real' folder:" % args.domain, sorted(doms))
+    for need in ("train", "test"):
+        if need not in doms:
+            print(f"WARNING: no {need}/{args.domain} with a 'real' folder under {images}. "
+                  f"Not downloaded, or still a .tar that must be extracted, or the folder is named differently.")
     carve = "train" in doms and "val" not in doms
     if carve:
         print(f"note: '{args.domain}' has no val split -> {int(args.val_frac * 100)}% of train is held out as val")
@@ -150,8 +155,13 @@ def main():
     for split, (real, gens) in doms.items():
         if split == "train" and carve:
             real_files = list_images(real)
+            if not real_files:
+                raise SystemExit(f"ERROR: {real} contains no images. Extract real.tar into it first.")
             for g, gpath in gens.items():
                 fake_files = list_images(gpath)
+                if not fake_files:
+                    print(f"  skipping '{g}': no images inside (leftover folder? move it out of the dataset)")
+                    continue
                 for part in ("train", "val"):
                     sel = lambda d: [(k, p) for k, p in sorted(d.items()) if (pct(k) < cut) == (part == "val")]
                     r, f = sel(real_files), sel(fake_files)
@@ -160,6 +170,8 @@ def main():
                     print(f"  {part:5s}/{g}: real {len(r)} | fake {len(f)}")
         else:
             n_real = len(list_images(real))
+            if n_real == 0:
+                print(f"  WARNING: {split}: {real} has no images (extract the .tar?)")
             for g, gpath in gens.items():
                 link_dir(real, os.path.join(args.out, split, g, "real"))
                 link_dir(gpath, os.path.join(args.out, split, g, "fake"))

@@ -24,7 +24,9 @@ def sample(folder, n, rng):
     return rng.sample(files, min(n, len(files)))
 
 
-def stats(files):
+def stats(files, where=""):
+    if not files:
+        raise SystemExit(f"ERROR: no images found in {where!r}. Is the folder empty / not extracted yet (.tar)? Check the path.")
     fmts, w, h, bpp, qsum = Counter(), [], [], [], []
     for f in files:
         with Image.open(f) as im:
@@ -57,8 +59,8 @@ def main():
     if not pairs:
         raise SystemExit("give --roots <dir with real/ and fake/> or --real <dir> --fake <dir>")
     for root, real_dir, fake_dir in pairs:
-        r = stats(sample(real_dir, args.n, rng))
-        f = stats(sample(fake_dir, args.n, rng))
+        r = stats(sample(real_dir, args.n, rng), real_dir)
+        f = stats(sample(fake_dir, args.n, rng), fake_dir)
         print(f"\n== {root}")
         for name, s in [("real", r), ("fake", f)]:
             print(f"  {name}: n={s['n']} | formats {s['fmt']} | median size {int(s['w'])}x{int(s['h'])} | "
