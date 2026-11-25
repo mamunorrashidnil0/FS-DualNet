@@ -1,0 +1,7 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    { "name": "Python: current file", "type": "debugpy", "request": "launch", "program": "${file}", "console": "integratedTerminal" },
+    { "name": "Smoke test (fs_dualnet.py)", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/fs_dualnet.py", "console": "integratedTerminal" }
+  ]
+}

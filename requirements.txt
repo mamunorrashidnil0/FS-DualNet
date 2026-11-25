@@ -1,0 +1,10 @@
+# Python 3.12 recommended (PyTorch wheels lag behind the newest Python versions)
+# PyTorch itself: install first from https://pytorch.org/get-started/locally  (CPU build, or the CUDA build if you have an NVIDIA GPU)
+torch
+torchvision
+scikit-learn
+pillow
+numpy
+opencv-python-headless
+matplotlib
+transformers   # v2: CLIP ViT backbone (downloads openai/clip-vit-base-patch16 once)
